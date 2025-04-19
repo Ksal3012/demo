@@ -1,16 +1,121 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
   <title>Aadhyay - Login</title>
   <script src="https://cdn.tailwindcss.com"></script>
-  <!-- Load Google Sign-In API -->
-  <script src="https://accounts.google.com/gsi/client" async defer></script>
+  
+  <!-- Firebase SDKs -->
+  <script src="https://www.gstatic.com/firebasejs/10.8.1/firebase-app-compat.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/10.8.1/firebase-auth-compat.js"></script>
 
-    
+  <!-- Your Firebase Configuration -->
+  <script>
+    const firebaseConfig = {
+        apiKey: "AIzaSyDKL9S4fQMfdvJVyUtGjdrgCOu38OAD4bw",
+  authDomain: "adhyay-3b9d7.firebaseapp.com",
+  projectId: "adhyay-3b9d7",
+  storageBucket: "adhyay-3b9d7.firebasestorage.app",
+  messagingSenderId: "736298939947",
+  appId: "1:736298939947:web:3f50c2ff9fe8f5d8851c6e"
+    };
 
+    // Initialize Firebase
+    firebase.initializeApp(firebaseConfig);
+  </script>
+  <!-- Container for the custom styled translate button -->
+<div id="custom_translate_wrapper">
+    <button id="custom_translate_button">🌐 Language</button>
+    <div id="google_translate_element"></div>
+  </div>
+  
+  <!-- Google Translate Script -->
+  <script type="text/javascript">
+    function googleTranslateElementInit() {
+      new google.translate.TranslateElement({
+        pageLanguage: 'en',
+        includedLanguages: 'en,fr,de,es,zh,hi', // English added here
+        layout: google.translate.TranslateElement.InlineLayout.SIMPLE,
+        autoDisplay: false
+      }, 'google_translate_element');
+    }
+  </script>
+  <script src="https://translate.google.com/translate_a/element.js?cb=googleTranslateElementInit"></script>
+  
+  <!-- Custom CSS Styling -->
+  <style>
+    #custom_translate_wrapper {
+      position: relative;
+      display: inline-block;
+    }
+  
+    #custom_translate_button {
+      background-color: #007BFF;
+      color: white;
+      padding: 10px 16px;
+      font-size: 16px;
+      border: none;
+      border-radius: 8px;
+      cursor: pointer;
+      transition: background-color 0.3s ease;
+    }
+  
+    #custom_translate_button:hover {
+      background-color: #0056b3;
+    }
+  
+    #google_translate_element {
+      display: none;
+      position: absolute;
+      top: 50px;
+      left: 0;
+      z-index: 9999;
+      background-color: white;
+      padding: 8px;
+      border: 1px solid #ddd;
+      border-radius: 8px;
+      box-shadow: 0 4px 8px rgba(0,0,0,0.1);
+    }
+  
+    /* Hide the Google logo and extra links */
+    .goog-logo-link,
+    .goog-te-gadget span {
+      display: none !important;
+    }
+  
+    .goog-te-gadget {
+      font-size: 0 !important;
+    }
+  
+    .goog-te-combo {
+      width: 100%;
+      padding: 6px 8px;
+      font-size: 16px;
+      border-radius: 6px;
+      border: 1px solid #ccc;
+    }
+  </style>
+  
+  <!-- Toggle Translate Dropdown -->
+  <script>
+    const btn = document.getElementById('custom_translate_button');
+    const dropdown = document.getElementById('google_translate_element');
+  
+    btn.addEventListener('click', () => {
+      dropdown.style.display = dropdown.style.display === 'block' ? 'none' : 'block';
+    });
+  
+    // Optional: Close dropdown when clicking outside
+    window.addEventListener('click', function(e) {
+      if (!document.getElementById('custom_translate_wrapper').contains(e.target)) {
+        dropdown.style.display = 'none';
+      }
+    });
+  </script>
+  
 </head>
+
 <body class="bg-gray-100">
   <div class="min-h-screen flex flex-col items-center justify-center">
     <div class="bg-white p-8 rounded-lg shadow-md w-full max-w-md">
@@ -18,28 +123,15 @@
         <h1 class="text-3xl font-bold text-orange-600">AdhyaySKILL</h1>
         <p class="text-gray-600 mt-2">Sign in to continue to your account</p>
       </div>
-      
-      <!-- Google Sign-in Button -->
-      <div id="g_id_onload"
-         data-client_id="YOUR_GOOGLE_CLIENT_ID"
-         data-context="signin"
-         data-ux_mode="popup"
-         data-callback="handleCredentialResponse"
-         data-auto_prompt="false">
+
+      <!-- Firebase Google Sign-In Button -->
+      <div class="flex justify-center">
+        <button id="googleLoginBtn" class="bg-white border border-gray-300 text-gray-700 px-6 py-2 rounded-lg shadow hover:shadow-md transition duration-200 flex items-center space-x-2">
+          <img src="https://www.gstatic.com/firebasejs/ui/2.0.0/images/auth/google.svg" class="h-5 w-5" alt="Google logo"/>
+          <span>Sign in with Google</span>
+        </button>
       </div>
 
-      <div class="flex justify-center">
-        <div class="g_id_signin"
-           data-type="standard"
-           data-shape="rectangular"
-           data-theme="outline"
-           data-text="signin_with"
-           data-size="large"
-           data-logo_alignment="center"
-           data-width="300">
-        </div>
-      </div>
-      
       <!-- Optional: Email/Password Login -->
       <div class="mt-8">
         <div class="text-center mb-4">
@@ -68,89 +160,41 @@
       </div>
     </div>
   </div>
-<!-- Change language from English to hindi -->
-<div id="google_translate_element"></div>
-<script type="text/javascript">
-    function googleTranslateElementInit() {
-    new google.translate.TranslateElement({
-    pageLanguage: 'en',
-    includedLanguages: 'fr,de,es,zh,hi', // Customize languages
-    layout: google.translate.TranslateElement.InlineLayout.SIMPLE
-}, 'google_translate_element');
-}
-</script>
-<script type="text/javascript" src="//translate.google.com/translate_a/element.js?cb=googleTranslateElementInit"></script>
 
+  <!-- Firebase Google Auth Script -->
   <script>
-    // Handle Google Sign-In response
-    function handleCredentialResponse(response) {
-      // Get the ID token from the response
-      const idToken = response.credential;
-      
-      // Send the token to your server for verification
-      // This is where you would make an API call to your backend
-      verifyGoogleToken(idToken);
-    }
-    
-    // Function to verify Google token with your backend
-    function verifyGoogleToken(idToken) {
-      fetch('/api/auth/google', {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json'
-        },
-        body: JSON.stringify({ token: idToken })
-      })
-      .then(response => response.json())
-      .then(data => {
-        if (data.success) {
-          // Authentication successful, redirect to dashboard
-          window.location.href = '/dashboard';
-        } else {
-          // Authentication failed
-          console.error('Google authentication failed:', data.message);
-          alert('Authentication failed. Please try again.');
-        }
-      })
-      .catch(error => {
-        console.error('Error during authentication:', error);
-        alert('An error occurred during authentication. Please try again.');
-      });
-    }
-    
-    // Handle traditional login form
+    const auth = firebase.auth();
+
+    document.getElementById('googleLoginBtn').addEventListener('click', () => {
+      const provider = new firebase.auth.GoogleAuthProvider();
+      auth.signInWithPopup(provider)
+        .then(result => {
+          // User signed in
+          const user = result.user;
+          console.log('Signed in as:', user.displayName);
+          window.location.href = '/dashboard'; // redirect on success
+        })
+        .catch(error => {
+          console.error('Google Sign-In Error:', error.message);
+          alert('Authentication failed: ' + error.message);
+        });
+    });
+
+    // Email/password login
     document.getElementById('loginForm').addEventListener('submit', function(e) {
       e.preventDefault();
       const email = document.getElementById('email').value;
       const password = document.getElementById('password').value;
-      
-      // Here you would make an API call to your backend for email/password authentication
-      login(email, password);
-    });
-    
-    function login(email, password) {
-      fetch('/api/auth/login', {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json'
-        },
-        body: JSON.stringify({ email, password })
-      })
-      .then(response => response.json())
-      .then(data => {
-        if (data.success) {
-          // Login successful, redirect to dashboard
+
+      auth.signInWithEmailAndPassword(email, password)
+        .then(userCredential => {
           window.location.href = '/dashboard';
-        } else {
-          // Login failed
-          alert('Login failed: ' + data.message);
-        }
-      })
-      .catch(error => {
-        console.error('Error during login:', error);
-        alert('An error occurred during login. Please try again.');
-      });
-    }
+        })
+        .catch(error => {
+          console.error('Login Error:', error.message);
+          alert('Login failed: ' + error.message);
+        });
+    });
   </script>
 </body>
 </html>
